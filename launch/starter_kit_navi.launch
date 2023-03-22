@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="master_ip" value="10.0.0.1" />
+  <arg name="laser1_sensor_ip" value="10.0.0.5" />
+  <arg name="laser1_prefix" value="laser_1" />
+  <arg name="map_file" default="/home/$(env USER)/maps/map.yaml" />
+
+  <!-- EZW ROS Controllers (diff-drive) -->
+  <include file="$(find swd_ros_controllers)/launch/swd_diff_drive_controller.launch"/>
+  
+  <node pkg="tf" type="static_transform_publisher" name="stp_laser" args="0.04 0 0 0 0 0 base_link laser 100" />
+  <node pkg="tf" type="static_transform_publisher" name="laser_broadcaster" args="0.04 0 0 0 0 0 base_link laser_1 100" />
+
+  <!-- SE2L -->
+  <node pkg="urg_node" name="urg_node" type="urg_node">
+    <param name="ip_address" value="$(arg laser1_sensor_ip)" />
+    <param name="angle_max" value="1.0" />
+    <param name="angle_min" value="-1.0" />
+  </node>
+
+  <!-- Map -->
+  <node respawn="true" name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/> 
+
+  <!-- Robot footprint -->
+  <rosparam param="footprint" ns="/move_base/local_costmap">[[0.35,-0.4], [0.35,0.4], [-0.5,0.4], [-0.5,-0.4]]</rosparam>
+  <rosparam param="footprint" ns="/move_base/global_costmap">[[0.35,-0.4], [0.35,0.4], [-0.5,0.4], [-0.5,-0.4]]</rosparam>
+
+  <!-- AMCL -->
+  <node name="amcl" pkg="amcl" type="amcl">
+    <param name="odom_alpha1" value="7.0" />
+    <param name="odom_alpha2" value="7.0" />
+    <param name="odom_alpha3" value="3.5" />
+    <param name="odom_alpha4" value="3.5" />
+    <param name="laser_max_beams" value="150" />
+    <param name="min_particles" value="300" />
+    <param name="max_particles" value="500" />
+    <param name="update_min_d" value="0.05" />
+    <param name="update_min_a" value="0.08" />
+  </node>
+
+  <!-- move base -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find swd_starter_kit_bringup)/config/move_base.yaml" command="load" />
+    <rosparam file="$(find swd_starter_kit_bringup)/config/costmap_common.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find swd_starter_kit_bringup)/config/costmap_common.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find swd_starter_kit_bringup)/config/costmap_local.yaml" command="load" />
+    <rosparam file="$(find swd_starter_kit_bringup)/config/costmap_global.yaml" command="load" />
+    <rosparam file="$(find swd_starter_kit_bringup)/config/planner_local.yaml" command="load" />
+    <rosparam file="$(find swd_starter_kit_bringup)/config/planner_global.yaml" command="load" />
+    <remap from="/cmd_vel" to="/swd_diff_drive_controller/cmd_vel" />
+    <remap from="/swd_diff_drive_controller/odom" to="/odom" />
+  </node>
+
+  <!-- Robot manager -->
+  <node pkg="swd_robot_manager" name="robot_manager" type="robot_manager" />
+
+  <!-- rviz -->
+  <node pkg="rviz" type="rviz" args="-d '$(find swd_starter_kit_bringup)/config/rviz/navigation.rviz'" name="visualizer" respawn="true" />
+
+</launch>

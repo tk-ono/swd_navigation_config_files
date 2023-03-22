@@ -1,0 +1,11 @@
+shutdown_costmaps: True #true
+controller_frequency: 3.0 #3.0
+controller_patience: 1.0
+
+planner_frequency: 2.0
+
+base_global_planner: "navfn/NavfnROS"
+base_local_planner: "dwa_local_planner/DWAPlannerROS"
+
+recovery_behavior_enabled: True #false
+clearing_rotation_allowed: False #false

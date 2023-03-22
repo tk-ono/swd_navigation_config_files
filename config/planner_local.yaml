@@ -1,0 +1,30 @@
+DWAPlannerROS:
+  max_vel_x: 3.0
+  min_vel_x: -0.05
+  max_vel_y: 0.0
+  min_vel_y: 0.0
+  max_vel_trans: 0.6
+  min_vel_trans: 0.0
+  
+  max_vel_theta: 3.0
+  min_vel_theta: 0.2
+  
+  acc_lim_x: 1.5
+  acc_lim_y: 0.0
+  acc_lim_th: 1.0
+
+
+  yaw_goal_tolerance: 0.2
+  xy_goal_tolerance: 0.1
+  latch_xy_goal_tolerance: True
+
+  sim_time: 1.2 #軌道をフォワードシミュレーションする時間 default 1
+  sim_granularity: 0.2 #与えられた軌道上の点間のステップサイズ default 0.025
+  vx_samples: 4 #速度空間の縦方向速度を探索するときに使用するサンプルの数 default 3
+  vtheta_samples: 10 #度空間の回転速度を探索するときに使用するサンプルの数 default 20
+
+  path_distance_bias: 4.0 #32.0
+  goal_distance_bias: 2.0 #24.0
+  occdist_scale: 128 #0.04
+  forward_point_distance: 0.325
+  
