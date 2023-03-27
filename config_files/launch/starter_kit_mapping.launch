@@ -13,7 +13,6 @@
   <node pkg="urg_node" name="urg_node" type="urg_node">
     <param name="ip_address" value="$(arg laser1_sensor_ip)" />
     <param name="frame_id" value="$(arg laser1_prefix)" />
-    <remap from="/scan" to="/$(arg laser1_prefix)/scan" />
   </node>
 
   <node pkg="tf" type="static_transform_publisher" name="laser_broadcaster" args="0.04 0 0 0 0 0 base_link laser_1 100" />
