@@ -200,6 +200,17 @@ install(
 
 install(
   FILES
+  ${CMAKE_CURRENT_SOURCE_DIR}/config/costmap_common.yaml
+  ${CMAKE_CURRENT_SOURCE_DIR}/config/costmap_global.yaml
+  ${CMAKE_CURRENT_SOURCE_DIR}/config/costmap_local.yaml
+  ${CMAKE_CURRENT_SOURCE_DIR}/config/move_base.yaml
+  ${CMAKE_CURRENT_SOURCE_DIR}/config/planner_global.yaml
+  ${CMAKE_CURRENT_SOURCE_DIR}/config/planner_local.yaml
+  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
+)
+
+install(
+  FILES
   ${CMAKE_CURRENT_SOURCE_DIR}/config/rviz/mapping.rviz
   ${CMAKE_CURRENT_SOURCE_DIR}/config/rviz/navigation.rviz
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config/rviz
